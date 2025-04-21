@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форты Калининграда</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        #search-input {
+            width: 60%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+        
+        #search-button {
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        #search-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .forts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .fort-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .fort-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .fort-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .fort-info {
+            padding: 15px;
+        }
+        
+        .fort-info h3 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .fort-info p {
+            margin-bottom: 8px;
+            color: #666;
+        }
+        
+        .price {
+            font-weight: bold;
+            color: var(--success-color);
+        }
+        
+        .admin-panel {
+            background-color: var(--dark-color);
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .admin-panel h2 {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .admin-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .admin-form input, .admin-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .admin-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        #admin-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            grid-column: 1 / -1;
+        }
+        
+        #admin-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .login-form {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .login-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .login-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .login-form button:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 5px;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: modalopen 0.3s;
+        }
+        
+        @keyframes modalopen {
+            from {opacity: 0; transform: translateY(-50px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+        
+        .booking-form input, .booking-form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .tickets-container {
+            margin-top: 30px;
+        }
+        
+        .ticket-card {
+            background-color: rgb(5, 5, 5);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: rgb(8, 8, 8);
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-form {
+                grid-template-columns: 1fr;
+            }
+            
+            #search-input {
+                width: 70%;
+            }
+            
+            .modal-content {
+                margin: 20% auto;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Форты Калининграда</h1>
+            <p>Исторические оборонительные сооружения города</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Поиск по фортам...">
+            <button id="search-button">Найти</button>
+        </div>
+        
+        <div id="forts-container" class="forts-grid">
+            <!-- Форты будут загружаться здесь -->
+        </div>
+        
+        <div id="admin-panel" class="admin-panel hidden">
+            <h2>Панель администратора</h2>
+            <form id="fort-form" class="admin-form">
+                <input type="hidden" id="fort-id">
+                <div class="form-group">
+                    <label for="fort-name">Название форта</label>
+                    <input type="text" id="fort-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="fort-location">Местоположение</label>
+                    <input type="text" id="fort-location" required>
+                </div>
+                <div class="form-group">
+                    <label for="fort-price">Цена входа (руб)</label>
+                    <input type="number" id="fort-price" required>
+                </div>
+                <div class="form-group">
+                    <label for="fort-hours">Часы работы</label>
+                    <input type="text" id="fort-hours" required>
+                </div>
+                <div class="form-group">
+                    <label for="fort-image">URL изображения</label>
+                    <input type="url" id="fort-image" required>
+                </div>
+                <div class="form-group full-width">
+                    <label for="fort-description">Описание</label>
+                    <textarea id="fort-description" required></textarea>
+                </div>
+                <button type="submit" id="admin-button" class="btn btn-primary">Сохранить</button>
+            </form>
+            <button id="logout-button" class="btn btn-danger">Выйти</button>
+            
+            <div class="tickets-container">
+                <h2>Забронированные билеты</h2>
+                <div id="tickets-list">
+                    <!-- Билеты будут загружаться здесь -->
+                </div>
+            </div>
+        </div>
+        
+        <div id="login-form" class="login-form">
+            <h2>Вход для администратора</h2>
+            <input type="password" id="admin-password" placeholder="Пароль">
+            <button id="login-button">Войти</button>
+        </div>
+    </div>
+    
+    <!-- Модальное окно для бронирования билета -->
+    <div id="booking-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Бронирование билета</h2>
+            <form id="booking-form" class="booking-form">
+                <input type="hidden" id="booking-fort-id">
+                <input type="hidden" id="booking-fort-name">
+                <input type="hidden" id="booking-fort-price">
+                
+                <div class="form-group">
+                    <label for="booking-name">Ваше имя</label>
+                    <input type="text" id="booking-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="booking-email">Email</label>
+                    <input type="email" id="booking-email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="booking-phone">Телефон</label>
+                    <input type="tel" id="booking-phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="booking-date">Дата посещения</label>
+                    <input type="date" id="booking-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="booking-time">Время посещения</label>
+                    <input type="time" id="booking-time" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="booking-count">Количество билетов</label>
+                    <input type="number" id="booking-count" min="1" value="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <p>Сумма к оплате: <span id="booking-total">0</span> руб.</p>
+                </div>
+                
+                <button type="submit" class="btn btn-success">Забронировать</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Модальное окно подтверждения бронирования -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Бронирование подтверждено!</h2>
+            <div id="confirm-content">
+                <!-- Информация о брони будет здесь -->
+            </div>
+            <button id="confirm-close" class="btn btn-primary">Закрыть</button>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Форты Калининграда. Все права защищены.</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Элементы DOM
+            const fortsContainer = document.getElementById('forts-container');
+            const searchInput = document.getElementById('search-input');
+            const searchButton = document.getElementById('search-button');
+            const adminPanel = document.getElementById('admin-panel');
+            const loginForm = document.getElementById('login-form');
+            const loginButton = document.getElementById('login-button');
+            const logoutButton = document.getElementById('logout-button');
+            const adminPassword = document.getElementById('admin-password');
+            const fortForm = document.getElementById('fort-form');
+            const bookingModal = document.getElementById('booking-modal');
+            const confirmModal = document.getElementById('confirm-modal');
+            const bookingForm = document.getElementById('booking-form');
+            const closeButtons = document.querySelectorAll('.close');
+            const confirmClose = document.getElementById('confirm-close');
+            const ticketsList = document.getElementById('tickets-list');
+            const bookingTotal = document.getElementById('booking-total');
+            
+            // Пароль администратора (в реальном приложении это должно быть на сервере)
+            const ADMIN_PASSWORD = 'admin123';
+            
+            // Проверка аутентификации
+            let isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+            
+            // Инициализация данных
+            let forts = JSON.parse(localStorage.getItem('forts')) || [
+                {
+                    id: 1,
+                    name: 'Форт №1 Штайн',
+                    location: 'ул. Нарвская, 1',
+                    price: 300,
+                    hours: '10:00 - 18:00, ежедневно',
+                    image: '',
+                    description: 'Форт №1 «Штайн» — один из фортов Кёнигсберга, построенный в 1875-1879 годах. Назван в честь прусского барона Генриха Фридриха Карла фон Штайна.'
+                },
+                {
+                    id: 2,
+                    name: 'Форт №3 Король Фридрих III',
+                    location: 'пос. Александровка',
+                    price: 250,
+                    hours: '11:00 - 17:00, кроме понедельника',
+                    image: '',
+                    description: 'Форт №3 «Король Фридрих III» — один из самых крупных и хорошо сохранившихся фортов Кёнигсберга. Построен в 1879 году.'
+                },
+                {
+                    id: 3,
+                    name: 'Форт №5 Король Фридрих Вильгельм III',
+                    location: 'ул. Булатова',
+                    price: 200,
+                    hours: '10:00 - 19:00, ежедневно',
+                    image: '',
+                    description: 'Форт №5 — памятник оборонительного зодчества и военно-исторический мемориальный комплекс. Назван в честь короля Пруссии Фридриха Вильгельма III.'
+                }
+            ];
+            
+            let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+            
+            // Сохраняем начальные данные, если их еще нет
+            if (!localStorage.getItem('forts')) {
+                localStorage.setItem('forts', JSON.stringify(forts));
+            }
+            
+            if (!localStorage.getItem('tickets')) {
+                localStorage.setItem('tickets', JSON.stringify(tickets));
+            }
+            
+            // Отображение фортов
+            function displayForts(fortsToDisplay) {
+                fortsContainer.innerHTML = '';
+                
+                fortsToDisplay.forEach(fort => {
+                    const fortCard = document.createElement('div');
+                    fortCard.className = 'fort-card';
+                    fortCard.innerHTML = `
+                        <img src="${fort.image}" alt="${fort.name}" class="fort-image">
+                        <div class="fort-info">
+                            <h3>${fort.name}</h3>
+                            <p><strong>Местоположение:</strong> ${fort.location}</p>
+                            <p><strong>Часы работы:</strong> ${fort.hours}</p>
+                            <p><strong>Цена входа:</strong> <span class="price">${fort.price} руб.</span></p>
+                            <p>${fort.description}</p>
+                            <button class="btn btn-primary book-btn" data-fort-id="${fort.id}">Забронировать билет</button>
+                        </div>
+                    `;
+                    
+                    if (isAuthenticated) {
+                        const editButton = document.createElement('button');
+                        editButton.textContent = 'Редактировать';
+                        editButton.className = 'btn btn-warning';
+                        editButton.style.marginTop = '5px';
+                        
+                        editButton.addEventListener('click', () => editFort(fort.id));
+                        
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Удалить';
+                        deleteButton.className = 'btn btn-danger';
+                        deleteButton.style.marginTop = '5px';
+                        
+                        deleteButton.addEventListener('click', () => deleteFort(fort.id));
+                        
+                        fortCard.querySelector('.fort-info').appendChild(editButton);
+                        fortCard.querySelector('.fort-info').appendChild(deleteButton);
+                    }
+                    
+                    fortsContainer.appendChild(fortCard);
+                });
+                
+                // Добавляем обработчики для кнопок бронирования
+                document.querySelectorAll('.book-btn').forEach(btn => {
+                    btn.addEventListener('click', openBookingModal);
+                });
+            }
+            
+            // Отображение билетов в админ-панели
+            function displayTickets() {
+                ticketsList.innerHTML = '';
+                
+                if (tickets.length === 0) {
+                    ticketsList.innerHTML = '<p>Нет забронированных билетов</p>';
+                    return;
+                }
+                
+                tickets.forEach((ticket, index) => {
+                    const ticketCard = document.createElement('div');
+                    ticketCard.className = 'ticket-card';
+                    ticketCard.innerHTML = `
+                        <h3>${ticket.fortName}</h3>
+                        <p><strong>Имя:</strong> ${ticket.name}</p>
+                        <p><strong>Email:</strong> ${ticket.email}</p>
+                        <p><strong>Телефон:</strong> ${ticket.phone}</p>
+                        <p><strong>Дата:</strong> ${ticket.date} в ${ticket.time}</p>
+                        <p><strong>Количество билетов:</strong> ${ticket.count}</p>
+                        <p><strong>Сумма:</strong> ${ticket.total} руб.</p>
+                        <p><strong>Код бронирования:</strong> ${ticket.code}</p>
+                        <button class="btn btn-danger delete-ticket-btn" data-index="${index}">Удалить бронь</button>
+                    `;
+                    
+                    ticketsList.appendChild(ticketCard);
+                });
+                
+                // Добавляем обработчики для кнопок удаления брони
+                document.querySelectorAll('.delete-ticket-btn').forEach(btn => {
+                    btn.addEventListener('click', deleteTicket);
+                });
+            }
+            
+            // Поиск фортов
+            function searchForts() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filteredForts = forts.filter(fort => 
+                    fort.name.toLowerCase().includes(searchTerm) || 
+                    fort.location.toLowerCase().includes(searchTerm) ||
+                    fort.description.toLowerCase().includes(searchTerm)
+                );
+                displayForts(filteredForts);
+            }
+            
+            // Добавление/редактирование форта
+            function handleFortSubmit(e) {
+                e.preventDefault();
+                
+                const fortData = {
+                    id: document.getElementById('fort-id').value || Date.now(),
+                    name: document.getElementById('fort-name').value,
+                    location: document.getElementById('fort-location').value,
+                    price: document.getElementById('fort-price').value,
+                    hours: document.getElementById('fort-hours').value,
+                    image: document.getElementById('fort-image').value,
+                    description: document.getElementById('fort-description').value
+                };
+                
+                const existingIndex = forts.findIndex(f => f.id == fortData.id);
+                
+                if (existingIndex >= 0) {
+                    forts[existingIndex] = fortData;
+                } else {
+                    forts.push(fortData);
+                }
+                
+                localStorage.setItem('forts', JSON.stringify(forts));
+                displayForts(forts);
+                fortForm.reset();
+                document.getElementById('fort-id').value = '';
+            }
+            
+            // Редактирование форта
+            function editFort(id) {
+                const fortToEdit = forts.find(f => f.id == id);
+                if (!fortToEdit) return;
+                
+                document.getElementById('fort-id').value = fortToEdit.id;
+                document.getElementById('fort-name').value = fortToEdit.name;
+                document.getElementById('fort-location').value = fortToEdit.location;
+                document.getElementById('fort-price').value = fortToEdit.price;
+                document.getElementById('fort-hours').value = fortToEdit.hours;
+                document.getElementById('fort-image').value = fortToEdit.image;
+                document.getElementById('fort-description').value = fortToEdit.description;
+                
+                window.scrollTo({
+                    top: document.getElementById('admin-panel').offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+            
+            // Удаление форта
+            function deleteFort(id) {
+                if (confirm('Вы уверены, что хотите удалить этот форт?')) {
+                    forts = forts.filter(f => f.id != id);
+                    localStorage.setItem('forts', JSON.stringify(forts));
+                    displayForts(forts);
+                }
+            }
+            
+            // Удаление брони
+            function deleteTicket(e) {
+                const index = e.target.getAttribute('data-index');
+                if (confirm('Вы уверены, что хотите удалить эту бронь?')) {
+                    tickets.splice(index, 1);
+                    localStorage.setItem('tickets', JSON.stringify(tickets));
+                    displayTickets();
+                }
+            }
+            
+            // Вход администратора
+            function handleLogin() {
+                if (adminPassword.value === ADMIN_PASSWORD) {
+                    isAuthenticated = true;
+                    localStorage.setItem('isAuthenticated', 'true');
+                    updateUI();
+                } else {
+                    alert('Неверный пароль');
+                }
+            }
+            
+            // Выход администратора
+            function handleLogout() {
+                isAuthenticated = false;
+                localStorage.removeItem('isAuthenticated');
+                updateUI();
+                fortForm.reset();
+                document.getElementById('fort-id').value = '';
+            }
+            
+            // Открытие модального окна бронирования
+            function openBookingModal(e) {
+                const fortId = e.target.getAttribute('data-fort-id');
+                const fort = forts.find(f => f.id == fortId);
+                
+                if (!fort) return;
+                
+                document.getElementById('booking-fort-id').value = fort.id;
+                document.getElementById('booking-fort-name').value = fort.name;
+                document.getElementById('booking-fort-price').value = fort.price;
+                
+                // Установка минимальной даты (сегодня)
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('booking-date').min = today;
+                
+                // Сброс формы
+                document.getElementById('booking-name').value = '';
+                document.getElementById('booking-email').value = '';
+                document.getElementById('booking-phone').value = '';
+                document.getElementById('booking-date').value = today;
+                document.getElementById('booking-time').value = '10:00';
+                document.getElementById('booking-count').value = 1;
+                updateBookingTotal();
+                
+                bookingModal.style.display = 'block';
+            }
+            
+            // Обновление суммы бронирования
+            function updateBookingTotal() {
+                const price = parseInt(document.getElementById('booking-fort-price').value);
+                const count = parseInt(document.getElementById('booking-count').value);
+                const total = price * count;
+                bookingTotal.textContent = total;
+            }
+            
+            // Обработка бронирования билета
+            function handleBookingSubmit(e) {
+                e.preventDefault();
+                
+                const fortId = document.getElementById('booking-fort-id').value;
+                const fort = forts.find(f => f.id == fortId);
+                
+                if (!fort) return;
+                
+                const bookingData = {
+                    fortId: fort.id,
+                    fortName: fort.name,
+                    name: document.getElementById('booking-name').value,
+                    email: document.getElementById('booking-email').value,
+                    phone: document.getElementById('booking-phone').value,
+                    date: document.getElementById('booking-date').value,
+                    time: document.getElementById('booking-time').value,
+                    count: parseInt(document.getElementById('booking-count').value),
+                    price: parseInt(fort.price),
+                    total: parseInt(fort.price) * parseInt(document.getElementById('booking-count').value),
+                    code: 'FORT-' + Math.random().toString(36).substr(2, 8).toUpperCase(),
+                    bookedAt: new Date().toLocaleString()
+                };
+                
+                tickets.push(bookingData);
+                localStorage.setItem('tickets', JSON.stringify(tickets));
+                
+                // Показываем подтверждение
+                showBookingConfirmation(bookingData);
+                
+                // Закрываем модальное окно бронирования
+                bookingModal.style.display = 'none';
+                
+                // Обновляем список билетов в админ-панели
+                if (isAuthenticated) {
+                    displayTickets();
+                }
+            }
+            
+            // Показ подтверждения бронирования
+            function showBookingConfirmation(booking) {
+                const confirmContent = document.getElementById('confirm-content');
+                confirmContent.innerHTML = `
+                    <p>Спасибо за бронирование, ${booking.name}!</p>
+                    <p>Вы забронировали ${booking.count} билет(а) на форт "${booking.fortName}"</p>
+                    <p><strong>Дата:</strong> ${booking.date} в ${booking.time}</p>
+                    <p><strong>Сумма к оплате:</strong> ${booking.total} руб.</p>
+                    <p><strong>Код бронирования:</strong> ${booking.code}</p>
+                    <p>Наш сотрудник свяжется с вами для подтверждения бронирования.</p>
+                `;
+                
+                confirmModal.style.display = 'block';
+            }
+            
+            // Закрытие модальных окон
+            function closeModals() {
+                bookingModal.style.display = 'none';
+                confirmModal.style.display = 'none';
+            }
+            
+            // Обновление интерфейса в зависимости от аутентификации
+            function updateUI() {
+                if (isAuthenticated) {
+                    adminPanel.classList.remove('hidden');
+                    loginForm.classList.add('hidden');
+                    displayTickets();
+                } else {
+                    adminPanel.classList.add('hidden');
+                    loginForm.classList.remove('hidden');
+                }
+                displayForts(forts);
+            }
+            
+            // Обработчики событий
+            searchButton.addEventListener('click', searchForts);
+            searchInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') searchForts();
+            });
+            
+            fortForm.addEventListener('submit', handleFortSubmit);
+            loginButton.addEventListener('click', handleLogin);
+            logoutButton.addEventListener('click', handleLogout);
+            bookingForm.addEventListener('submit', handleBookingSubmit);
+            confirmClose.addEventListener('click', closeModals);
+            
+            // Закрытие модальных окон при клике вне контента
+            window.addEventListener('click', (e) => {
+                if (e.target === bookingModal) {
+                    bookingModal.style.display = 'none';
+                }
+                if (e.target === confirmModal) {
+                    confirmModal.style.display = 'none';
+                }
+            });
+            
+            // Закрытие модальных окон при клике на крестик
+            closeButtons.forEach(btn => {
+                btn.addEventListener('click', closeModals);
+            });
+            
+            // Обновление суммы при изменении количества билетов
+            document.getElementById('booking-count').addEventListener('change', updateBookingTotal);
+            document.getElementById('booking-count').addEventListener('input', updateBookingTotal);
+            
+            // Инициализация
+            updateUI();
+            displayForts(forts);
+        });
+    </script>
+</body>
+</html>
